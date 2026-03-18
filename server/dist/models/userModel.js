@@ -1,13 +1,20 @@
-import { pool } from '../config/db.js';
+import mongoose, { Schema } from 'mongoose';
+const UserSchema = new Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String },
+    google_id: { type: String },
+    created_at: { type: Date, default: Date.now }
+});
+const UserModel = mongoose.model('User', UserSchema);
 export const createUser = async (name, email, password, google_id) => {
-    const result = await pool.query('INSERT INTO users (name, email, password, google_id) VALUES ($1, $2, $3, $4) RETURNING *', [name, email, password, google_id]);
-    return result.rows[0];
+    const user = new UserModel({ name, email, password, google_id });
+    return await user.save();
 };
 export const getUserByEmail = async (email) => {
-    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-    return result.rows[0] || null;
+    return await UserModel.findOne({ email });
 };
 export const getUserById = async (id) => {
-    const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
-    return result.rows[0] || null;
+    return await UserModel.findById(id);
 };
+export default UserModel;

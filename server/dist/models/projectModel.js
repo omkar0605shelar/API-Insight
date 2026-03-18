@@ -1,16 +1,22 @@
-import { pool } from '../config/db.js';
+import mongoose, { Schema } from 'mongoose';
+const ProjectSchema = new Schema({
+    user_id: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    repository_url: { type: String, required: true },
+    status: { type: String, default: 'pending' },
+    created_at: { type: Date, default: Date.now }
+});
+const ProjectModel = mongoose.model('Project', ProjectSchema);
 export const createProject = async (userId, repositoryUrl) => {
-    const result = await pool.query('INSERT INTO projects (user_id, repository_url, status) VALUES ($1, $2, $3) RETURNING *', [userId, repositoryUrl, 'pending']);
-    return result.rows[0];
+    const project = new ProjectModel({ user_id: userId, repository_url: repositoryUrl });
+    return await project.save();
 };
 export const getProjectsByUser = async (userId) => {
-    const result = await pool.query('SELECT * FROM projects WHERE user_id = $1 ORDER BY created_at DESC', [userId]);
-    return result.rows;
+    return await ProjectModel.find({ user_id: userId }).sort({ created_at: -1 });
 };
 export const getProjectById = async (id, userId) => {
-    const result = await pool.query('SELECT * FROM projects WHERE id = $1 AND user_id = $2', [id, userId]);
-    return result.rows[0] || null;
+    return await ProjectModel.findOne({ _id: id, user_id: userId });
 };
 export const updateProjectStatus = async (id, status) => {
-    await pool.query('UPDATE projects SET status = $1 WHERE id = $2', [status, id]);
+    await ProjectModel.updateOne({ _id: id }, { status });
 };
+export default ProjectModel;
