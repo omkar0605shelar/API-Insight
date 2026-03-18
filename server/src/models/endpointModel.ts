@@ -1,13 +1,22 @@
-import { pool } from '../config/db.js';
+import mongoose, { Document, Schema } from 'mongoose';
 
-export interface Endpoint {
-  id: string;
-  project_id: string;
+export interface Endpoint extends Document {
+  project_id: mongoose.Types.ObjectId;
   method: string;
   path: string;
   request_schema: any;
   response_schema: any;
 }
+
+const EndpointSchema: Schema = new Schema({
+  project_id: { type: Schema.Types.ObjectId, ref: 'Project', required: true },
+  method: { type: String, required: true },
+  path: { type: String, required: true },
+  request_schema: { type: Schema.Types.Mixed },
+  response_schema: { type: Schema.Types.Mixed }
+});
+
+const EndpointModel = mongoose.model<Endpoint>('Endpoint', EndpointSchema);
 
 export const createEndpoint = async (
   projectId: string,
@@ -16,14 +25,18 @@ export const createEndpoint = async (
   requestSchema: any,
   responseSchema: any
 ): Promise<Endpoint> => {
-  const result = await pool.query(
-    'INSERT INTO endpoints (project_id, method, path, request_schema, response_schema) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-    [projectId, method, path, JSON.stringify(requestSchema), JSON.stringify(responseSchema)]
-  );
-  return result.rows[0];
+  const endpoint = new EndpointModel({
+    project_id: projectId,
+    method,
+    path,
+    request_schema: requestSchema,
+    response_schema: responseSchema
+  });
+  return await endpoint.save();
 };
 
 export const getEndpointsByProject = async (projectId: string): Promise<Endpoint[]> => {
-  const result = await pool.query('SELECT * FROM endpoints WHERE project_id = $1', [projectId]);
-  return result.rows;
+  return await EndpointModel.find({ project_id: projectId });
 };
+
+export default EndpointModel;
