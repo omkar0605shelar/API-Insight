@@ -5,6 +5,8 @@ import { setCredentials } from '../redux/slices/authSlice';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
 import { Code } from 'lucide-react';
+import { auth, googleProvider } from '../config/firebase';
+import { signInWithPopup } from 'firebase/auth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -31,9 +33,27 @@ const Login = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
-    // In a real app this would trigger the Google OAuth flow
-    alert("Google OAuth Trigger: In production this will open Google SignIn modal");
+  const handleGoogleLogin = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      // Robust way to get the ID Token from Firebase
+      const idToken = await result.user.getIdToken();
+      
+      if (!idToken) {
+        throw new Error('Google Sign-In failed to retrieve ID Token');
+      }
+      
+      const response = await api.post('/auth/google', { tokenId: idToken });
+      dispatch(setCredentials({ user: response.data, token: response.data.token }));
+      navigate('/dashboard');
+    } catch (err: any) {
+      console.error('Google Sign-In Error:', err);
+      setError(err.response?.data?.message || err.message || 'Google authentication failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

@@ -7,7 +7,6 @@ import { connectRabbitMQ } from './config/rabbitmq.js';
 import authRoutes from './routes/authRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
 import endpointRoutes from './routes/endpointRoutes.js';
-import { startWorker } from './workers/scannerWorker.js';
 dotenv.config();
 const app = express();
 app.use(cors());
@@ -25,8 +24,6 @@ const start = async () => {
         await initDb();
         await connectRedis();
         await connectRabbitMQ();
-        // Start RabbitMQ background worker
-        startWorker();
         const PORT = process.env.PORT || 5000;
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);

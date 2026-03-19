@@ -53,7 +53,7 @@ export const startWorker = async () => {
     }
 
     console.log('Code Scanner Worker started, waiting for jobs...');
-    channel.consume('api_scan_jobs', async (msg) => {
+    channel.consume('api_scan_jobs', async (msg: any) => {
       if (!msg) return;
 
       const { projectId, repositoryUrl } = JSON.parse(msg.content.toString());

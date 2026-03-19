@@ -11,14 +11,14 @@ export const importRepository = async (req: AuthRequest, res: Response): Promise
   }
 
   try {
-    const project = await createProject(req.user.id, repositoryUrl);
+    const project = await createProject((req.user as any)._id, repositoryUrl);
     
     // Send to RabbitMQ
     const channel = getChannel();
     if (channel) {
       channel.sendToQueue(
         'api_scan_jobs',
-        Buffer.from(JSON.stringify({ projectId: project.id, repositoryUrl }))
+        Buffer.from(JSON.stringify({ projectId: (project as any)._id, repositoryUrl }))
       );
     } else {
       console.error('RabbitMQ channel not available');
@@ -34,7 +34,7 @@ export const importRepository = async (req: AuthRequest, res: Response): Promise
 export const getUserProjects = async (req: AuthRequest, res: Response): Promise<void> => {
   if (!req.user) return;
   try {
-    const projects = await getProjectsByUser(req.user.id);
+    const projects = await getProjectsByUser((req.user as any)._id);
     res.json(projects);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
@@ -44,7 +44,7 @@ export const getUserProjects = async (req: AuthRequest, res: Response): Promise<
 export const getProjectDetails = async (req: AuthRequest, res: Response): Promise<void> => {
   if (!req.user) return;
   try {
-    const project = await getProjectById(req.params.id as string, req.user.id);
+    const project = await getProjectById(req.params.id as string, (req.user as any)._id);
     if (!project) {
       res.status(404).json({ message: 'Project not found' });
       return;

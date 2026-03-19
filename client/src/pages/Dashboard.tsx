@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { setProjects, addProject, Project } from '../redux/slices/projectSlice';
+import type { RootState } from '../redux/store';
+import { setProjects, addProject } from '../redux/slices/projectSlice';
+import type { Project } from '../redux/slices/projectSlice';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
 import { Search, Plus, FolderGit2, Activity, Github, RefreshCw } from 'lucide-react';

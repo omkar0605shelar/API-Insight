@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from './redux/store';
+import type { RootState } from './redux/store';
 
 // Placeholders for pages
 import LandingPage from './pages/LandingPage';
@@ -9,7 +9,9 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ProjectDetails from './pages/ProjectDetails';
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+import React from 'react';
+
+const ProtectedRoute = ({ children }: { children: React.ReactElement }) => {
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };

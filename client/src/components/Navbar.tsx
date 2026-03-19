@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../redux/store';
+import type { RootState } from '../redux/store';
 import { logout } from '../redux/slices/authSlice';
 import { LogOut, User as UserIcon, Code, Moon, Sun } from 'lucide-react';
 
