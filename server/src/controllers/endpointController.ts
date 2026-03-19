@@ -14,7 +14,7 @@ export const getProjectEndpoints = async (req: AuthRequest, res: Response): Prom
 
   try {
     // 1. Validate user has access to project
-    const project = await getProjectById(projectId as string, req.user.id);
+    const project = await getProjectById(projectId as string, (req.user as any)._id);
     if (!project) {
       res.status(404).json({ message: 'Project not found' });
       return;

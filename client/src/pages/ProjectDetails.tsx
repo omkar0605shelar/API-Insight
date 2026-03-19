@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
-import { setEndpoints, Endpoint, setSelectedEndpoint } from '../redux/slices/endpointSlice';
+import type { RootState } from '../redux/store';
+import { setEndpoints, setSelectedEndpoint } from '../redux/slices/endpointSlice';
+import type { Endpoint } from '../redux/slices/endpointSlice';
 import api from '../services/api';
 import Navbar from '../components/Navbar';
-import { Search, ChevronRight, Activity, Code as CodeIcon, Server, Database } from 'lucide-react';
+import { Search, Code as CodeIcon, Server, Database } from 'lucide-react';
 
 const ProjectDetails = () => {
   const { id } = useParams<{ id: string }>();

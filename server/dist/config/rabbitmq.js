@@ -6,9 +6,19 @@ let channel;
 export const connectRabbitMQ = async () => {
     try {
         const url = process.env.RABBITMQ_URL || 'amqp://localhost:5672';
-        connection = await amqp.connect(url);
+        const socketOptions = url.startsWith('amqps')
+            ? { cert: '', key: '', rejectUnauthorized: false }
+            : {};
+        connection = await amqp.connect(url, socketOptions);
+        connection.on('error', (err) => {
+            console.error('RabbitMQ connection error:', err);
+        });
+        connection.on('close', () => {
+            console.warn('RabbitMQ connection closed.');
+        });
         channel = await connection.createChannel();
-        console.log('RabbitMQ Connected');
+        const displayUrl = url.includes('@') ? url.split('@').pop() : url;
+        console.log(`RabbitMQ Connected to ${displayUrl}`);
         // Assert required queues
         const queues = ['api_scan_jobs'];
         for (const q of queues) {
