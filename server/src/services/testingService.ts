@@ -1,0 +1,55 @@
+import axios from 'axios';
+import { TestingRepository } from '../repositories/testingRepository.js';
+
+const testingRepository = new TestingRepository();
+
+export class TestingService {
+  async executeRequest(userId: string, endpointId: string, method: string, url: string, headers: any, body: any) {
+    const startTime = Date.now();
+    let response;
+    let status;
+    let duration;
+
+    try {
+      const axiosRes = await axios({
+        method,
+        url,
+        headers: headers || {},
+        data: body,
+        validateStatus: () => true, // Catch all statuses to show them to the user
+      });
+
+      response = axiosRes.data;
+      status = axiosRes.status;
+      duration = Date.now() - startTime;
+    } catch (error: any) {
+      status = error.response ? error.response.status : 500;
+      response = error.response ? error.response.data : { message: error.message };
+      duration = Date.now() - startTime;
+    }
+
+    // Save to PostgreSQL history
+    try {
+      await testingRepository.saveHistory({
+        endpoint_id: endpointId,
+        user_id: userId,
+        method: method.toUpperCase(),
+        url,
+        headers: headers || {},
+        body: body || {},
+        status,
+        duration,
+        response: response || {}
+      });
+    } catch (saveError) {
+      console.error('Failed to save request history:', saveError);
+      // Don't fail the request if history save fails
+    }
+
+    return { status, duration, response };
+  }
+
+  async getHistory(endpointId: string) {
+    return testingRepository.getHistoryByEndpoint(endpointId);
+  }
+}

@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import ProjectDetails from './pages/ProjectDetails';
+import Teams from './pages/Teams';
 
 import React from 'react';
 
@@ -47,6 +48,12 @@ function App() {
           <Route path="/projects/:id" element={
             <ProtectedRoute>
               <ProjectDetails />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/teams" element={
+            <ProtectedRoute>
+              <Teams />
             </ProtectedRoute>
           } />
         </Routes>

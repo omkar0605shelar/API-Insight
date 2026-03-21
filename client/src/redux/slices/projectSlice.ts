@@ -6,16 +6,20 @@ export interface Project {
   repository_url: string;
   status: string;
   created_at: string;
+  analytics?: any;
+  versions?: any[];
 }
 
 interface ProjectState {
   projects: Project[];
   currentProject: Project | null;
+  loading: boolean;
 }
 
 const initialState: ProjectState = {
   projects: [],
   currentProject: null,
+  loading: false,
 };
 
 const projectSlice = createSlice({
@@ -31,8 +35,29 @@ const projectSlice = createSlice({
     setCurrentProject: (state, action: PayloadAction<Project | null>) => {
       state.currentProject = action.payload;
     },
+    setProjectAnalytics: (state, action: PayloadAction<{ projectId: string; analytics: any }>) => {
+      const project = state.projects.find(p => p.id === action.payload.projectId);
+      if (project) {
+        project.analytics = action.payload.analytics;
+      }
+      if (state.currentProject?.id === action.payload.projectId) {
+        state.currentProject.analytics = action.payload.analytics;
+      }
+    },
+    setProjectVersions: (state, action: PayloadAction<{ projectId: string; versions: any[] }>) => {
+      const project = state.projects.find(p => p.id === action.payload.projectId);
+      if (project) {
+        project.versions = action.payload.versions;
+      }
+      if (state.currentProject?.id === action.payload.projectId) {
+        state.currentProject.versions = action.payload.versions;
+      }
+    },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
+    }
   },
 });
 
-export const { setProjects, addProject, setCurrentProject } = projectSlice.actions;
+export const { setProjects, addProject, setCurrentProject, setProjectAnalytics, setProjectVersions, setLoading } = projectSlice.actions;
 export default projectSlice.reducer;

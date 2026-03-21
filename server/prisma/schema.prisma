@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String       @id @default(uuid())
+  name          String
+  email         String       @unique
+  password      String?
+  google_id     String?
+  created_at    DateTime     @default(now())
+  projects      Project[]
+  team_members TeamMember[]
+}
+
+model Team {
+  id          String       @id @default(uuid())
+  name        String
+  created_at  DateTime     @default(now())
+  members     TeamMember[]
+  projects    Project[]
+}
+
+model TeamMember {
+  id      String @id @default(uuid())
+  team_id String
+  user_id String
+  role    Role   @default(MEMBER)
+  team    Team   @relation(fields: [team_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id])
+
+  @@unique([team_id, user_id])
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+model Project {
+  id              String       @id @default(uuid())
+  user_id         String
+  team_id         String?
+  repository_url  String
+  status          String       @default("pending")
+  created_at      DateTime     @default(now())
+  user            User         @relation(fields: [user_id], references: [id])
+  team            Team?        @relation(fields: [team_id], references: [id])
+  endpoints       Endpoint[]
+  versions        ApiVersion[]
+}
+
+model Endpoint {
+  id               String           @id @default(uuid())
+  project_id       String
+  method           String
+  path             String
+  request_schema   Json?
+  response_schema  Json?
+  ai_explanation   String?
+  project          Project          @relation(fields: [project_id], references: [id])
+  history          RequestHistory[]
+}
+
+model ApiVersion {
+  id          String   @id @default(uuid())
+  project_id  String
+  version     String
+  changes     String?
+  created_at  DateTime @default(now())
+  project     Project  @relation(fields: [project_id], references: [id])
+}
+
+model RequestHistory {
+  id          String   @id @default(uuid())
+  endpoint_id String
+  user_id     String
+  method      String
+  url         String
+  headers     Json?
+  body        Json?
+  status      Int
+  duration    Int
+  response    Json?
+  created_at  DateTime @default(now())
+  endpoint    Endpoint @relation(fields: [endpoint_id], references: [id])
+}
