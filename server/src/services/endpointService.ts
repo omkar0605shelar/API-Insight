@@ -1,0 +1,37 @@
+import { EndpointRepository } from '../repositories/endpointRepository.js';
+import { ProjectRepository } from '../repositories/projectRepository.js';
+import redisClient from '../config/redis.js';
+
+const endpointRepository = new EndpointRepository();
+const projectRepository = new ProjectRepository();
+
+export class EndpointService {
+  async getProjectEndpoints(projectId: string, userId: string): Promise<any[]> {
+    // 1. Validate user has access to project
+    const project = await projectRepository.findById(projectId, userId);
+    if (!project) {
+      const error = new Error('Project not found');
+      (error as any).statusCode = 404;
+      throw error;
+    }
+
+    // 2. Check Redis Cache
+    const cacheKey = `endpoints:${projectId}`;
+    if (redisClient.isOpen) {
+      const cached = await redisClient.get(cacheKey);
+      if (cached) {
+        return JSON.parse(cached);
+      }
+    }
+
+    // 3. Get from DB
+    const endpoints = await endpointRepository.findByProjectId(projectId);
+
+    // 4. Save to Cache ONLY if project is completed (expire in 1 hour)
+    if (redisClient.isOpen && project.status === 'completed') {
+      await redisClient.setEx(cacheKey, 3600, JSON.stringify(endpoints));
+    }
+
+    return endpoints;
+  }
+}

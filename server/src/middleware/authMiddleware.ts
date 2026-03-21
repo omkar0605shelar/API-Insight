@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { getUserById, User } from '../models/userModel.js';
+import prisma from '../config/client.js';
 
 export interface AuthRequest extends Request {
-  user?: User;
+  user?: any;
 }
 
 export const protect = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
@@ -12,7 +12,8 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
     try {
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret') as { id: string };
-      const user = await getUserById(decoded.id);
+      
+      const user = await prisma.user.findUnique({ where: { id: decoded.id } });
       
       if (!user) {
          res.status(401).json({ message: 'Not authorized, user not found' });
@@ -21,9 +22,11 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
       
       req.user = user;
       next();
+      return;
     } catch (error) {
-      console.error(error);
+      console.error('Auth Middleware Error:', error);
       res.status(401).json({ message: 'Not authorized, token failed' });
+      return;
     }
   }
 
