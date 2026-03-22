@@ -5,6 +5,9 @@ const UserSchema = new Schema({
     password: { type: String },
     google_id: { type: String },
     created_at: { type: Date, default: Date.now }
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 const UserModel = mongoose.model('User', UserSchema);
 export const createUser = async (name, email, password, google_id) => {

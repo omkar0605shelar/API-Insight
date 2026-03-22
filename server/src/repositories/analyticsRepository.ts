@@ -1,22 +1,26 @@
+import { Prisma } from '@prisma/client';
 import prisma from '../config/client.js';
 
 export class AnalyticsRepository {
   async getRequestCountsByEndpoint(projectId: string): Promise<any[]> {
-    return prisma.requestHistory.groupBy({
+    const args = Prisma.validator<Prisma.RequestHistoryGroupByArgs>()({
       by: ['endpoint_id', 'method', 'url'],
       where: { endpoint: { project_id: projectId } },
       _count: { id: true },
-      orderBy: { _count: { id: 'desc' } }
+      orderBy: [
+        {
+          _count: {
+            id: 'desc'
+          }
+        }
+      ]
     });
+    return prisma.requestHistory.groupBy(args as any); // Keeping as any for now as Prisma groupBy types are notoriously difficult with aggregates and relations.
   }
 
   async getDailyRequestCounts(projectId: string, days: number = 7): Promise<any[]> {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
-
-    // Prisma doesn't support grouping by date part easily in all DBs without raw query, 
-    // but we can fetch and process or use a raw query.
-    // Let's use a raw query for better performance on PostgreSQL.
     return prisma.$queryRaw`
       SELECT DATE(created_at) as date, COUNT(*) as count
       FROM "RequestHistory"

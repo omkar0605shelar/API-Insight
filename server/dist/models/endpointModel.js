@@ -5,6 +5,9 @@ const EndpointSchema = new Schema({
     path: { type: String, required: true },
     request_schema: { type: Schema.Types.Mixed },
     response_schema: { type: Schema.Types.Mixed }
+}, {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
 });
 const EndpointModel = mongoose.model('Endpoint', EndpointSchema);
 export const createEndpoint = async (projectId, method, path, requestSchema, responseSchema) => {

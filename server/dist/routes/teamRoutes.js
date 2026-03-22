@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { createTeam, inviteMember, getMyTeams, getTeamDetails } from '../controllers/teamController.js';
+import { protect } from '../middleware/authMiddleware.js';
+import { authorize } from '../middleware/rbacMiddleware.js';
+const router = Router();
+router.use(protect);
+router.post('/', createTeam);
+router.post('/invite', authorize(['ADMIN']), inviteMember);
+router.get('/', getMyTeams);
+router.get('/:teamId', getTeamDetails);
+export default router;
