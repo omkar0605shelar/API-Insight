@@ -1,14 +1,12 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-dotenv.config();
+import prisma from './client.js';
 export const initDb = async () => {
     try {
-        const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/api_insight';
-        await mongoose.connect(mongoUri);
-        console.log('Connected to MongoDB');
+        await prisma.$connect();
+        await prisma.$queryRaw `SELECT 1`;
+        console.log('Connected to PostgreSQL via Prisma');
     }
     catch (error) {
-        console.error('Error connecting to MongoDB:', error);
+        console.error('Error connecting to PostgreSQL:', error);
         throw error;
     }
 };
