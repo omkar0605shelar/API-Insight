@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { ArrowRight, Code, Database, RefreshCw, Layers, CheckCircle } from 'lucide-react';
+import { ArrowRight, Code, Database, Layers, CheckCircle } from 'lucide-react';
 
 const LandingPage = () => {
   return (
