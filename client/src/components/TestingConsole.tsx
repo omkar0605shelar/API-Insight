@@ -38,7 +38,7 @@ const TestingConsole = ({ endpoint }: TestingConsoleProps) => {
       const result = await executeApiRequest({
         endpointId: endpoint.id,
         method: endpoint.method,
-        url: `http://localhost:5000/api/mock/${endpoint.project_id}${endpoint.path}`, // Using mock server by default
+        url: `${import.meta.env.VITE_API_URL.replace('/api', '')}/api/mock/${endpoint.project_id}${endpoint.path}`,
         headers: JSON.parse(headers),
         body: endpoint.method !== 'GET' ? JSON.parse(requestBody) : undefined
       });
@@ -65,12 +65,11 @@ const TestingConsole = ({ endpoint }: TestingConsoleProps) => {
     <div className="bg-card/50 backdrop-blur-xl border border-border rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[600px]">
       {/* Header / URL Bar */}
       <div className="p-4 border-b border-border bg-muted/30 flex items-center gap-3">
-        <div className={`px-3 py-1 rounded-md font-bold text-xs ${
-          endpoint.method === 'GET' ? 'bg-blue-500/10 text-blue-500' :
-          endpoint.method === 'POST' ? 'bg-green-500/10 text-green-500' :
-          endpoint.method === 'PUT' ? 'bg-yellow-500/10 text-yellow-500' :
-          'bg-red-500/10 text-red-500'
-        }`}>
+        <div className={`px-3 py-1 rounded-md font-bold text-xs ${endpoint.method === 'GET' ? 'bg-blue-500/10 text-blue-500' :
+            endpoint.method === 'POST' ? 'bg-green-500/10 text-green-500' :
+              endpoint.method === 'PUT' ? 'bg-yellow-500/10 text-yellow-500' :
+                'bg-red-500/10 text-red-500'
+          }`}>
           {endpoint.method}
         </div>
         <div className="flex-1 bg-background/50 border border-border rounded-lg px-3 py-1.5 text-sm font-mono truncate">
@@ -92,9 +91,8 @@ const TestingConsole = ({ endpoint }: TestingConsoleProps) => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab as any)}
-            className={`px-6 py-3 text-xs font-semibold uppercase tracking-wider transition-all relative ${
-              activeTab === tab ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-            }`}
+            className={`px-6 py-3 text-xs font-semibold uppercase tracking-wider transition-all relative ${activeTab === tab ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+              }`}
           >
             {tab}
             {activeTab === tab && (
