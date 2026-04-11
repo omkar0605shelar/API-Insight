@@ -93,7 +93,11 @@ export const processScanJob = async (projectId: string, repositoryUrl: string) =
     await prisma.project.update({ where: { id: projectId }, data: { status: 'completed' } });
     
     if (redisClient.isOpen) {
-      await redisClient.del(`endpoints:${projectId}`);
+      try {
+        await redisClient.del(`endpoints:${projectId}`);
+      } catch (err) {
+        console.warn('⚠️  Failed to clear Redis cache after scan:', (err as any).message);
+      }
     }
     
     io.to(projectId).emit('status_update', { status: 'completed', message: 'Scanning completed successfully' });

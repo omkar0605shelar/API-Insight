@@ -14,19 +14,22 @@ const redisClient = createClient({
   socket: {
     keepAlive: 30000,
     reconnectStrategy: (retries) => {
-      // Exponential backoff or simple delay
-      return Math.min(retries * 100, 3000);
+      // Small delay helps let the socket clear before reconnecting
+      const delay = Math.min(retries * 100, 3000);
+      return Math.max(delay, 500); // Minimum 500ms delay
     }
   }
 });
 
 redisClient.on('error', (err) => {
-  // Ignore "Socket closed unexpectedly" logs as they are handled by auto-reconnect
-  if (err.message === 'Socket closed unexpectedly') return;
+  // Silent handling of standard socket closures
+  if (err.message === 'Socket closed unexpectedly' || err.code === 'ECONNRESET') {
+    return; 
+  }
 
   console.error('❌ Redis Client Error:', err.message);
-  if (err.code === 'ECONNREFUSED') {
-    console.error('👉 Make sure Redis is running and accessible at', REDIS_URL);
+  if (err.code === 'ECONNREFUSED' || err.code === 'ENOTFOUND') {
+    console.error('👉 Redis connection unreachable at', REDIS_URL);
   }
 });
 
