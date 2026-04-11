@@ -35,3 +35,19 @@ export const auditEndpoint = async (req: AuthRequest, res: Response, next: NextF
     next(error);
   }
 };
+
+export const refactorEndpoint = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
+  const { endpointId } = req.params;
+  
+  if (!req.user) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+
+  try {
+    const refactorResult = await aiService.refactorEndpoint(endpointId);
+    res.json(refactorResult);
+  } catch (error) {
+    next(error);
+  }
+};

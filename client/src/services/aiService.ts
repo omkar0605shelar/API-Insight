@@ -9,3 +9,8 @@ export const auditEndpoint = async (endpointId: string) => {
   const response = await api.get(`/endpoints/${endpointId}/audit`);
   return response.data;
 };
+
+export const refactorEndpoint = async (endpointId: string) => {
+  const response = await api.get(`/endpoints/${endpointId}/refactor`);
+  return response.data;
+};

@@ -9,6 +9,7 @@ import Navbar from '../components/Navbar';
 import TestingConsole from '../components/TestingConsole';
 import AIExplanation from '../components/AIExplanation';
 import AIAudit from '../components/AIAudit';
+import AIRefactor from '../components/AIRefactor';
 import { Search, Code as CodeIcon, Server, Database, ArrowLeft, Terminal, LayoutDashboard, Settings, Info, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -154,6 +155,9 @@ const ProjectDetails = () => {
 
                 {/* AI Security Auditor Integrated */}
                 <AIAudit endpointId={selectedEndpoint.id} />
+
+                {/* AI Refactoring Expert Integrated */}
+                <AIRefactor endpointId={selectedEndpoint.id} />
 
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-10">
                   {/* Left Column: Schemas */}
