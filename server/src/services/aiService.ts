@@ -325,4 +325,24 @@ ${JSON.stringify(endpointList)}
     return this.callNvidia(prompt);
   }
 
+  // 🛡️ Wrapper for Frontend Compatibility
+  async explainEndpoint(endpointId: string) {
+    const endpoint = await prisma.endpoint.findUnique({
+       where: { id: endpointId },
+       include: { project: true }
+    });
+
+    if (!endpoint) throw new Error('Endpoint not found');
+
+    // Treat the structured endpoint data as the "code" for the documentation generator
+    const apiContext = \`
+Method: \${endpoint.method}
+Path: \${endpoint.path}
+Request: \${JSON.stringify(endpoint.request_schema)}
+Response: \${JSON.stringify(endpoint.response_schema)}
+    \`;
+
+    return this.generateSmartDocumentation(apiContext);
+  }
+
 }
