@@ -39,7 +39,7 @@ app.use(express.json());
 // Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 100, // 100 requests per 15 minutes
+  limit: process.env.NODE_ENV === 'production' ? 100 : 10000, // 10k limit for local development
   standardHeaders: 'draft-7',
   legacyHeaders: false,
 });
