@@ -1,0 +1,39 @@
+{
+  "name": "API Insight Cloud Docker",
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  "service": "api",
+  "workspaceFolder": "/workspace",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
+  },
+  "forwardPorts": [
+    5000,
+    5173,
+    5432,
+    6379
+  ],
+  "portsAttributes": {
+    "5173": {
+      "label": "Frontend (Web)",
+      "onAutoForward": "notify"
+    },
+    "5000": {
+      "label": "Backend (API)",
+      "onAutoForward": "silent"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "prisma.prisma"
+      ]
+    }
+  },
+  "remoteUser": "root"
+}

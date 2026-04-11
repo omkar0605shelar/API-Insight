@@ -10,9 +10,20 @@ if (!process.env.REDIS_URL) {
 
 const redisClient = createClient({
   url: REDIS_URL,
+  pingInterval: 30000, // Send a ping every 30 seconds to keep connection alive
+  socket: {
+    keepAlive: 30000,
+    reconnectStrategy: (retries) => {
+      // Exponential backoff or simple delay
+      return Math.min(retries * 100, 3000);
+    }
+  }
 });
 
 redisClient.on('error', (err) => {
+  // Ignore "Socket closed unexpectedly" logs as they are handled by auto-reconnect
+  if (err.message === 'Socket closed unexpectedly') return;
+
   console.error('❌ Redis Client Error:', err.message);
   if (err.code === 'ECONNREFUSED') {
     console.error('👉 Make sure Redis is running and accessible at', REDIS_URL);

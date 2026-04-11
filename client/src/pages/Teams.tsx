@@ -14,7 +14,7 @@ const Teams = () => {
   const [inviteEmail, setInviteEmail] = useState('');
   const [selectedTeamId, setSelectedTeamId] = useState<string | null>(null);
   const [inviting, setInviting] = useState(false);
-  
+
   const dispatch = useDispatch();
   const { teams } = useSelector((state: RootState) => state.team);
 
@@ -70,33 +70,33 @@ const Teams = () => {
   return (
     <div className="min-h-screen bg-slate-50/50 flex flex-col">
       <Navbar />
-      
+
       <main className="flex-1 container mx-auto px-6 py-10 max-w-7xl">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
           <div className="space-y-1">
-             <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 italic uppercase">Collective Units</h1>
-             <p className="text-slate-500 text-lg">Manage your development squads and platform accessibility.</p>
+            <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 italic uppercase">Collective Units</h1>
+            <p className="text-slate-500 text-lg">Manage your development squads and platform accessibility.</p>
           </div>
 
-          <motion.form 
+          <motion.form
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            onSubmit={handleCreateTeam} 
+            onSubmit={handleCreateTeam}
             className="flex items-center gap-3 w-full md:w-auto"
           >
             <div className="relative flex-1 md:w-64">
-               <Users className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-               <input
-                 type="text"
-                 value={newTeamName}
-                 onChange={(e) => setNewTeamName(e.target.value)}
-                 placeholder="New Team Identity"
-                 className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-2xl bg-white focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all outline-none font-bold text-sm"
-                 required
-               />
+              <Users className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input
+                type="text"
+                value={newTeamName}
+                onChange={(e) => setNewTeamName(e.target.value)}
+                placeholder="New Team Identity"
+                className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-2xl bg-white focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all outline-none font-bold text-sm"
+                required
+              />
             </div>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={creating}
               className="bg-slate-900 text-white px-6 py-3 rounded-2xl font-black text-sm flex items-center transition-all disabled:opacity-50 shadow-xl shadow-slate-200 active:scale-95"
             >
@@ -126,7 +126,7 @@ const Teams = () => {
             ) : (
               <div className="grid gap-6">
                 {teams.map((team, idx) => (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.1 }}
@@ -137,19 +137,19 @@ const Teams = () => {
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
                       <div className="space-y-1">
                         <div className="flex items-center gap-3">
-                           <h3 className="font-black text-2xl text-slate-900 group-hover:text-primary transition-colors">{team.name}</h3>
-                           {selectedTeamId === team.id && (
-                             <span className="bg-primary/10 text-primary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-sm border border-primary/10">Active Context</span>
-                           )}
+                          <h3 className="font-black text-2xl text-slate-900 group-hover:text-primary transition-colors">{team.name}</h3>
+                          {selectedTeamId === team.id && (
+                            <span className="bg-primary/10 text-primary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-sm border border-primary/10">Active Context</span>
+                          )}
                         </div>
                         <p className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-black flex items-center gap-2">
-                           <Globe className="h-3 w-3" /> Created {new Date(team.created_at).toLocaleDateString()}
+                          <Globe className="h-3 w-3" /> Created {new Date(team.created_at).toLocaleDateString()}
                         </p>
                       </div>
                       <div className="flex -space-x-3 group/members">
                         {team.members.map((member: any) => (
-                          <div 
-                            key={member.user_id} 
+                          <div
+                            key={member.user_id}
                             className="h-12 w-12 rounded-xl bg-slate-100 border-4 border-white flex items-center justify-center text-xs font-black shadow-lg hover:-translate-y-2 transition-transform cursor-default"
                             title={member.user?.name}
                           >
@@ -157,23 +157,23 @@ const Teams = () => {
                           </div>
                         ))}
                         <div className="h-12 w-12 rounded-xl bg-primary text-white border-4 border-white flex items-center justify-center text-xs font-black shadow-lg">
-                           +0
+                          +0
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="mt-8 pt-8 border-t border-slate-50 flex items-center justify-between">
-                       <div className="flex items-center gap-8">
-                          <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">
-                            <Users className="h-3.5 w-3.5" />
-                            {team.members.length} Squad Members
-                          </div>
-                          <div className="flex items-center gap-2 text-[10px] font-black text-emerald-500 uppercase tracking-widest leading-none">
-                            <ShieldCheck className="h-3.5 w-3.5" />
-                            Authorized Pipeline
-                          </div>
-                       </div>
-                       <ArrowRight className={`h-5 w-5 text-slate-200 group-hover:text-primary transition-all ${selectedTeamId === team.id ? 'translate-x-2 text-primary' : ''}`} />
+                      <div className="flex items-center gap-8">
+                        <div className="flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                          <Users className="h-3.5 w-3.5" />
+                          {team.members.length} Squad Members
+                        </div>
+                        <div className="flex items-center gap-2 text-[10px] font-black text-emerald-500 uppercase tracking-widest leading-none">
+                          <ShieldCheck className="h-3.5 w-3.5" />
+                          Authorized Pipeline
+                        </div>
+                      </div>
+                      <ArrowRight className={`h-5 w-5 text-slate-200 group-hover:text-primary transition-all ${selectedTeamId === team.id ? 'translate-x-2 text-primary' : ''}`} />
                     </div>
                   </motion.div>
                 ))}
@@ -185,20 +185,20 @@ const Teams = () => {
           <div className="lg:col-span-4 space-y-8">
             <AnimatePresence mode="wait">
               {selectedTeamId ? (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                   className="bg-slate-900 rounded-[2.5rem] p-10 text-white relative overflow-hidden shadow-2xl"
                 >
                   <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-                     <UserPlus className="h-32 w-32" />
+                    <UserPlus className="h-32 w-32" />
                   </div>
                   <h3 className="font-black text-2xl mb-2 flex items-center gap-3">
                     <UserPlus className="h-6 w-6 text-primary" /> Recruit Expert
                   </h3>
                   <p className="text-sm text-slate-400 font-bold mb-10 uppercase tracking-widest">Expansion Protocol</p>
-                  
+
                   <form onSubmit={handleInvite} className="space-y-8">
                     <div className="space-y-3">
                       <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 pl-1">Communication Channel</label>
@@ -214,7 +214,7 @@ const Teams = () => {
                         />
                       </div>
                     </div>
-                    
+
                     <button
                       type="submit"
                       disabled={inviting}
@@ -227,15 +227,15 @@ const Teams = () => {
                 </motion.div>
               ) : (
                 <div className="bg-slate-50 border border-slate-200 rounded-[2.5rem] p-10 text-center flex flex-col items-center justify-center space-y-4 opacity-60">
-                   <Users className="h-12 w-12 text-slate-300" />
-                   <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Select Team for Operations</p>
+                  <Users className="h-12 w-12 text-slate-300" />
+                  <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Select Team for Operations</p>
                 </div>
               )}
             </AnimatePresence>
-            
+
             <div className="p-8 bg-white border border-slate-100 rounded-[2.5rem] shadow-premium relative overflow-hidden">
               <div className="absolute top-0 right-0 p-6 opacity-[0.03] pointer-events-none">
-                 <Shield className="h-24 w-24" />
+                <Shield className="h-24 w-24" />
               </div>
               <h4 className="font-black flex items-center gap-2 mb-8 text-xs uppercase tracking-[0.25em] text-slate-900 italic">
                 <Shield className="h-4 w-4 text-primary" /> Authority Hierarchy
@@ -246,10 +246,10 @@ const Teams = () => {
                   { r: 'EXPERT', c: 'text-blue-500 bg-blue-50', d: 'Read/Write access to pipelines and diagnostic consoles.' },
                   { r: 'OBSERVER', c: 'text-slate-400 bg-slate-50', d: 'Read-only access to intelligence documentation.' }
                 ].map(role => (
-                   <div key={role.r} className="space-y-2">
-                      <span className={`px-3 py-1 rounded-lg text-[10px] font-black italic tracking-widest ${role.c}`}>{role.r}</span>
-                      <p className="text-xs text-slate-500 font-medium leading-relaxed">{role.d}</p>
-                   </div>
+                  <div key={role.r} className="space-y-2">
+                    <span className={`px-3 py-1 rounded-lg text-[10px] font-black italic tracking-widest ${role.c}`}>{role.r}</span>
+                    <p className="text-xs text-slate-500 font-medium leading-relaxed">{role.d}</p>
+                  </div>
                 ))}
               </div>
             </div>
@@ -259,7 +259,5 @@ const Teams = () => {
     </div>
   );
 };
-
-export default Teams;
 
 export default Teams;

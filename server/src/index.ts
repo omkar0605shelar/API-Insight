@@ -5,7 +5,7 @@ import http from 'http';
 import { initSocket } from './config/socket.js';
 import { initDb } from './config/db.js';
 import { connectRedis } from './config/redis.js';
-import { connectRabbitMQ } from './config/rabbitmq.js';
+// import { connectRabbitMQ } from './config/rabbitmq.js';
 import authRoutes from './routes/authRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
 import endpointRoutes from './routes/endpointRoutes.js';
@@ -66,7 +66,7 @@ const start = async () => {
   try {
     await initDb();
     await connectRedis();
-    await connectRabbitMQ();
+    // await connectRabbitMQ();
     
     // Start RabbitMQ background worker
     startWorker();

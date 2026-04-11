@@ -12,9 +12,10 @@ model User {
   email                 String       @unique
   password              String?
   google_id             String?
-  stripe_customer_id    String?      @unique
-  subscription_tier     String       @default("free") // free, pro, enterprise
-  subscription_status   String?      // active, past_due, canceled
+  razorpay_customer_id     String?      @unique
+  razorpay_subscription_id String?      @unique
+  subscription_tier        String       @default("pro") // free, pro, enterprise
+  subscription_status      String?      // active, past_due, canceled
   created_at            DateTime     @default(now())
   projects              Project[]
   team_members          TeamMember[]

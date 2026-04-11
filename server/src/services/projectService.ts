@@ -1,5 +1,6 @@
 import { ProjectRepository } from '../repositories/projectRepository.js';
-import { getChannel } from '../config/rabbitmq.js';
+// import { getChannel } from '../config/rabbitmq.js';
+import { processScanJob } from '../workers/scannerWorker.js';
 
 const projectRepository = new ProjectRepository();
 
@@ -7,15 +8,10 @@ export class ProjectService {
   async importRepository(userId: string, repositoryUrl: string) {
     const project = await projectRepository.create(userId, repositoryUrl);
     
-    const channel = getChannel();
-    if (channel) {
-      channel.sendToQueue(
-        'api_scan_jobs',
-        Buffer.from(JSON.stringify({ projectId: project.id, repositoryUrl }))
-      );
-    } else {
-      console.warn('RabbitMQ channel not available, job not queued');
-    }
+    // Trigger scan directly in the background
+    processScanJob(project.id, repositoryUrl).catch(err => {
+      console.error(`Background scan failed for project ${project.id}:`, err);
+    });
 
     return project;
   }

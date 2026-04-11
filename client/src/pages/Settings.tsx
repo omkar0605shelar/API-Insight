@@ -88,7 +88,6 @@ const Settings = () => {
             {[
               { id: 'profile', label: 'Profile Settings', icon: User },
               { id: 'keys', label: 'API Infrastructure', icon: Key },
-              { id: 'billing', label: 'Billing & Plans', icon: CreditCard },
             ].map(tab => (
               <button
                 key={tab.id}
@@ -190,91 +189,7 @@ const Settings = () => {
                 </motion.div>
               )}
 
-              {activeTab === 'billing' && (
-                <motion.div
-                  key="billing"
-                  initial={{ opacity: 0, x: 10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -10 }}
-                  className="space-y-8"
-                >
-                  {/* Current Plan */}
-                  <div className="bg-slate-900 text-white border border-slate-800 rounded-3xl p-10 shadow-2xl relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-10 opacity-10">
-                       <ExternalLink className="h-32 w-32" />
-                    </div>
-                    <div className="flex flex-col sm:flex-row justify-between items-start gap-8 relative z-10">
-                       <div className="space-y-4">
-                          <p className="text-xs font-black text-primary uppercase tracking-[0.3em]">Current Subscription</p>
-                          <h3 className="text-4xl font-black">{subscription?.plan === 'PRO' ? 'Pro Logic' : 'Standard Node'}</h3>
-                          <div className="flex items-center gap-4 text-slate-400 font-bold">
-                             <span className="flex items-center gap-1.5"><Check className="h-4 w-4 text-emerald-400" /> {subscription?.usage || 0} / {subscription?.limit || 500} Calls</span>
-                             <span className="h-1 w-1 bg-slate-700 rounded-full" />
-                             <span>Renews in 12 days</span>
-                          </div>
-                       </div>
-                       <div className="flex flex-col gap-3 w-full sm:w-auto">
-                          <button className="bg-white text-slate-900 px-8 py-3 rounded-2xl font-black text-sm hover:shadow-xl transition-all">
-                             Manage Payments
-                          </button>
-                       </div>
-                    </div>
-                  </div>
-
-                  {/* Pricing Cards */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                     <div className="bg-white border border-slate-200 rounded-3xl p-8 space-y-6 shadow-premium relative">
-                        <div className="space-y-2">
-                           <h4 className="text-xl font-black text-slate-900">Developer Cloud</h4>
-                           <p className="text-slate-500 text-sm font-medium">Perfect for small teams and side projects.</p>
-                        </div>
-                        <div className="flex items-baseline gap-1">
-                           <span className="text-3xl font-black text-slate-900">₹0</span>
-                           <span className="text-slate-400 font-bold">/ forever</span>
-                        </div>
-                        <ul className="space-y-4 pt-4 border-t border-slate-50">
-                           {['Up to 5 Projects', '500 AI Calls / mo', 'Standard Latency', 'Community Support'].map(f => (
-                             <li key={f} className="flex items-center gap-3 text-sm font-bold text-slate-600">
-                                <Check className="h-4 w-4 text-emerald-500" /> {f}
-                             </li>
-                           ))}
-                        </ul>
-                        <button disabled className="w-full py-4 bg-slate-100 text-slate-400 rounded-2xl font-black text-sm cursor-not-allowed">
-                           Current Plan
-                        </button>
-                     </div>
-
-                     <div className="bg-white border-2 border-primary rounded-3xl p-8 space-y-6 shadow-premium relative overflow-hidden">
-                        <div className="absolute top-0 right-0 bg-primary text-white text-[10px] font-black px-4 py-1.5 rounded-bl-2xl uppercase tracking-widest">
-                           Most Popular
-                        </div>
-                        <div className="space-y-2">
-                           <h4 className="text-xl font-black text-slate-900 border-b border-slate-100 pb-2 flex items-center gap-2">
-                              <Zap className="h-5 w-5 text-primary" /> Intelligence Pro
-                           </h4>
-                           <p className="text-slate-500 text-sm font-medium">Scale your platform with deep AI diagnostics.</p>
-                        </div>
-                        <div className="flex items-baseline gap-1">
-                           <span className="text-3xl font-black text-slate-900">₹999</span>
-                           <span className="text-slate-400 font-bold">/ month</span>
-                        </div>
-                        <ul className="space-y-4 pt-4 border-t border-slate-50">
-                           {['Unlimited Projects', '10,000 AI Calls / mo', 'P95/P99 Intelligence', 'Priority API Access'].map(f => (
-                             <li key={f} className="flex items-center gap-3 text-sm font-bold text-slate-600">
-                                <Check className="h-4 w-4 text-primary" /> {f}
-                             </li>
-                           ))}
-                        </ul>
-                        <button 
-                          onClick={() => handleUpgrade('price_1...')} // Replace with variable if needed
-                          className="w-full py-4 bg-primary text-white rounded-2xl font-black text-sm hover:shadow-xl transition-all animate-pulse-subtle"
-                        >
-                           Upgrade to Pro
-                        </button>
-                     </div>
-                  </div>
-                </motion.div>
-              )}
+              {/* Billing tab removed for now */}
 
               {activeTab === 'profile' && (
                 <motion.div

@@ -20,7 +20,7 @@ const LandingPage = () => {
   return (
     <div className="flex flex-col min-h-screen bg-white selection:bg-primary selection:text-white">
       <Navbar />
-      
+
       {/* Hero Section */}
       <section className="relative pt-32 pb-24 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-full -z-10 opacity-30 pointer-events-none">
@@ -36,15 +36,15 @@ const LandingPage = () => {
             className="space-y-10"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-2xl shadow-sm">
-                <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">The Intelligence-First API Platform</span>
+              <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">The Intelligence-First API Platform</span>
             </div>
 
             <h1 className="text-6xl md:text-8xl font-black tracking-tight text-slate-900 leading-[0.95] max-w-5xl mx-auto italic uppercase">
               Reverse Engineer <br />
               <span className="text-primary not-italic">Infrastructure</span> Logic.
             </h1>
-            
+
             <p className="text-xl md:text-2xl text-slate-500 max-w-2xl mx-auto font-medium leading-relaxed">
               Instantly convert backend repositories into clean documentation, intelligence diagrams, and AI-powered diagnostic consoles.
             </p>
@@ -60,26 +60,26 @@ const LandingPage = () => {
           </motion.div>
 
           {/* Product Preview Placeholder */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
             className="mt-24 relative max-w-6xl mx-auto"
           >
             <div className="p-4 bg-slate-900/5 rounded-[3rem] border border-slate-200/50 backdrop-blur-3xl shadow-premium">
-               <div className="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-2xl aspect-[16/9] flex items-center justify-center relative group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
-                  <Monitor className="h-20 w-20 text-slate-100 group-hover:scale-110 transition-transform duration-700" />
-                  <div className="absolute bottom-8 left-8 right-8 flex items-end justify-between">
-                     <div className="space-y-2 text-left">
-                        <div className="h-2 w-32 bg-slate-100 rounded-full" />
-                        <div className="h-2 w-48 bg-slate-100 rounded-full" />
-                     </div>
-                     <div className="p-4 bg-slate-900 rounded-2xl shadow-xl">
-                        <Zap className="h-6 w-6 text-white" />
-                     </div>
+              <div className="bg-white rounded-[2rem] border border-slate-100 overflow-hidden shadow-2xl aspect-[16/9] flex items-center justify-center relative group">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent pointer-events-none" />
+                <Monitor className="h-20 w-20 text-slate-100 group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute bottom-8 left-8 right-8 flex items-end justify-between">
+                  <div className="space-y-2 text-left">
+                    <div className="h-2 w-32 bg-slate-100 rounded-full" />
+                    <div className="h-2 w-48 bg-slate-100 rounded-full" />
                   </div>
-               </div>
+                  <div className="p-4 bg-slate-900 rounded-2xl shadow-xl">
+                    <Zap className="h-6 w-6 text-white" />
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -88,12 +88,12 @@ const LandingPage = () => {
       {/* Trust Bar */}
       <div className="py-20 border-y border-slate-100 bg-slate-50/30">
         <div className="max-w-7xl mx-auto px-6">
-           <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 text-center mb-12">Integrated with the Modern Stack</p>
-           <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
-              {['GitHub', 'NVIDIA', 'Stripe', 'Redis', 'PostgreSQL', 'Docker'].map(logo => (
-                <span key={logo} className="text-2xl font-black italic tracking-tighter text-slate-900">{logo}</span>
-              ))}
-           </div>
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 text-center mb-12">Integrated with the Modern Stack</p>
+          <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+            {['GitHub', 'NVIDIA', 'Stripe', 'Redis', 'PostgreSQL', 'Docker'].map(logo => (
+              <span key={logo} className="text-2xl font-black italic tracking-tighter text-slate-900">{logo}</span>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -101,11 +101,11 @@ const LandingPage = () => {
       <section className="py-32 bg-white px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center space-y-4 mb-24">
-             <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 italic uppercase">Autonomous Analysis</h2>
-             <p className="text-slate-500 text-lg font-medium max-w-xl mx-auto">Skip the manual onboarding. API Insight connects directly to your source.</p>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 italic uppercase">Autonomous Analysis</h2>
+            <p className="text-slate-500 text-lg font-medium max-w-xl mx-auto">Skip the manual onboarding. API Insight connects directly to your source.</p>
           </div>
 
-          <motion.div 
+          <motion.div
             variants={container}
             initial="hidden"
             whileInView="show"
@@ -120,13 +120,13 @@ const LandingPage = () => {
               { title: 'Mock Ecosystem', desc: 'Instant virtual sandbox for internal testing and review.', icon: Layout, color: 'bg-rose-50 text-rose-600' },
               { title: 'Global Observability', desc: 'Real-time telemetry and error tracking for all projects.', icon: Globe, color: 'bg-cyan-50 text-cyan-600' }
             ].map((f, i) => (
-              <motion.div 
+              <motion.div
                 variants={item}
-                key={i} 
+                key={i}
                 className="p-8 bg-white border border-slate-100 rounded-[2rem] hover:border-primary/20 hover:shadow-premium transition-all group"
               >
                 <div className={`p-4 rounded-2xl w-fit ${f.color} mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                   <f.icon className="h-6 w-6" />
+                  <f.icon className="h-6 w-6" />
                 </div>
                 <h3 className="text-xl font-black text-slate-900 mb-3">{f.title}</h3>
                 <p className="text-slate-500 font-medium leading-relaxed">{f.desc}</p>
@@ -138,42 +138,42 @@ const LandingPage = () => {
 
       {/* Intelligence Section */}
       <section className="py-24 bg-slate-900 text-white overflow-hidden relative">
-         <div className="absolute top-0 right-0 p-24 opacity-10 pointer-events-none">
-            <Sparkles className="h-64 w-64 text-primary animate-pulse" />
-         </div>
-         <div className="max-w-7xl mx-auto px-6 flex flex-col items-center text-center relative z-10">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tight italic uppercase mb-8 leading-none">
-               Powered by <br />
-               <span className="text-primary not-italic">NVIDIA Intelligence</span>
-            </h2>
-            <p className="text-slate-400 text-xl font-medium max-w-2xl mb-12">
-               Our underlying LLM service uses NVIDIA NIM to provide sub-millisecond route diagnostics and security vulnerability detection.
-            </p>
-            <div className="w-full max-w-4xl p-8 bg-white/5 border border-white/10 rounded-[2.5rem] backdrop-blur-md">
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {[
-                    { label: 'Latency Reduction', val: '45%' },
-                    { label: 'Security Score', val: 'A+' },
-                    { label: 'Global Uptime', val: '99.99%' }
-                  ].map(stat => (
-                    <div key={stat.label} className="space-y-2">
-                       <p className="text-[10px] font-black text-primary uppercase tracking-widest">{stat.label}</p>
-                       <p className="text-4xl font-black italic">{stat.val}</p>
-                    </div>
-                  ))}
-               </div>
+        <div className="absolute top-0 right-0 p-24 opacity-10 pointer-events-none">
+          <Sparkles className="h-64 w-64 text-primary animate-pulse" />
+        </div>
+        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center text-center relative z-10">
+          <h2 className="text-4xl md:text-6xl font-black tracking-tight italic uppercase mb-8 leading-none">
+            Powered by <br />
+            <span className="text-primary not-italic">NVIDIA Intelligence</span>
+          </h2>
+          <p className="text-slate-400 text-xl font-medium max-w-2xl mb-12">
+            Our underlying LLM service uses NVIDIA NIM to provide sub-millisecond route diagnostics and security vulnerability detection.
+          </p>
+          <div className="w-full max-w-4xl p-8 bg-white/5 border border-white/10 rounded-[2.5rem] backdrop-blur-md">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                { label: 'Latency Reduction', val: '45%' },
+                { label: 'Security Score', val: 'A+' },
+                { label: 'Global Uptime', val: '99.99%' }
+              ].map(stat => (
+                <div key={stat.label} className="space-y-2">
+                  <p className="text-[10px] font-black text-primary uppercase tracking-widest">{stat.label}</p>
+                  <p className="text-4xl font-black italic">{stat.val}</p>
+                </div>
+              ))}
             </div>
-         </div>
+          </div>
+        </div>
       </section>
 
       {/* Comparison Section */}
       <section className="py-32 bg-white px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-20 space-y-4">
-             <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 uppercase italic">Better by Design</h2>
-             <p className="text-slate-500 text-lg font-medium">Why developers are switching to the intelligence platform.</p>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 uppercase italic">Better by Design</h2>
+            <p className="text-slate-500 text-lg font-medium">Why developers are switching to the intelligence platform.</p>
           </div>
-          
+
           <div className="overflow-hidden rounded-[2.5rem] border border-slate-100 shadow-premium">
             <table className="w-full text-left border-collapse">
               <thead>
@@ -205,48 +205,46 @@ const LandingPage = () => {
 
       {/* CTA Section */}
       <section className="py-32 bg-slate-50 border-t border-slate-100 px-6">
-         <div className="max-w-4xl mx-auto text-center space-y-12">
-            <h2 className="text-5xl md:text-6xl font-black tracking-tight text-slate-900 uppercase italic">Start Building</h2>
-            <p className="text-slate-500 text-xl font-medium">Join 2,400+ developers engineering the future of infrastructure intelligence.</p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-                <Link to="/register" className="w-full sm:w-auto bg-primary text-white h-16 px-12 rounded-2xl font-black text-lg hover:shadow-2xl hover:shadow-primary/30 transition-all active:scale-95">
-                   Create Free Protocol
-                </Link>
-                <div className="flex items-center gap-4 text-slate-400 font-bold">
-                   <div className="flex -space-x-2">
-                      {[1,2,3,4].map(i => (
-                        <div key={i} className={`h-8 w-8 rounded-full border-2 border-white bg-slate-${i*100+100}`} />
-                      ))}
-                   </div>
-                   <span className="text-xs uppercase tracking-widest">+2.4k users</span>
-                </div>
+        <div className="max-w-4xl mx-auto text-center space-y-12">
+          <h2 className="text-5xl md:text-6xl font-black tracking-tight text-slate-900 uppercase italic">Start Building</h2>
+          <p className="text-slate-500 text-xl font-medium">Join 2,400+ developers engineering the future of infrastructure intelligence.</p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Link to="/register" className="w-full sm:w-auto bg-primary text-white h-16 px-12 rounded-2xl font-black text-lg hover:shadow-2xl hover:shadow-primary/30 transition-all active:scale-95">
+              Create Free Protocol
+            </Link>
+            <div className="flex items-center gap-4 text-slate-400 font-bold">
+              <div className="flex -space-x-2">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className={`h-8 w-8 rounded-full border-2 border-white bg-slate-${i * 100 + 100}`} />
+                ))}
+              </div>
+              <span className="text-xs uppercase tracking-widest">+2.4k users</span>
             </div>
-         </div>
+          </div>
+        </div>
       </section>
 
       {/* Footer */}
       <footer className="py-12 bg-white border-t border-slate-50">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
-           <div className="flex items-center gap-3">
-              <div className="p-2 bg-slate-900 rounded-lg">
-                 <Zap className="h-4 w-4 text-white" />
-              </div>
-              <span className="font-black italic text-slate-900 tracking-tighter uppercase">API Insight Platform</span>
-           </div>
-           <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
-             &copy; 2026 THE INTELLIGENCE GROUP. ALL RIGHTS RESERVED.
-           </p>
-           <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-slate-400">
-              <a href="#" className="hover:text-primary transition-colors">Security</a>
-              <a href="#" className="hover:text-primary transition-colors">Privacy</a>
-              <a href="#" className="hover:text-primary transition-colors">SLA</a>
-           </div>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-slate-900 rounded-lg">
+              <Zap className="h-4 w-4 text-white" />
+            </div>
+            <span className="font-black italic text-slate-900 tracking-tighter uppercase">API Insight Platform</span>
+          </div>
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+            &copy; 2026 THE INTELLIGENCE GROUP. ALL RIGHTS RESERVED.
+          </p>
+          <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-slate-400">
+            <a href="#" className="hover:text-primary transition-colors">Security</a>
+            <a href="#" className="hover:text-primary transition-colors">Privacy</a>
+            <a href="#" className="hover:text-primary transition-colors">SLA</a>
+          </div>
         </div>
       </footer>
     </div>
   );
 };
-
-export default LandingPage;
 
 export default LandingPage;
