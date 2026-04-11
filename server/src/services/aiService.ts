@@ -1,118 +1,328 @@
 import OpenAI from 'openai';
 import prisma from '../config/client.js';
-import redisClient from '../config/redis.js';
 
 const nvidia = new OpenAI({
   apiKey: process.env.NVIDIA_API_KEY || 'mock_key',
   baseURL: process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1',
 });
 
-// Standard technical model for analysis
+// Using the latest NVIDIA Llama 3.3 model
 const MODEL = "meta/llama-3.3-70b-instruct";
 
+/**
+ * Resilient JSON parsing to handle LLM markdown hallucinations
+ */
+const cleanLLMJSON = (responseText: string): any => {
+  try {
+    // Remove markdown backticks and 'json' declaration
+    const cleaned = responseText.replace(/```json/gi, '').replace(/```/g, '').trim();
+    return JSON.parse(cleaned);
+  } catch (error) {
+    console.error("Failed to parse LLM JSON response:", responseText);
+    throw new Error('Invalid JSON format from AI model');
+  }
+};
+
 export class AIService {
+  
   /**
-   * Performs deep analysis on API logs to find the root cause of failures.
+   * Base method to call the NVIDIA APIs
    */
-  async rootCauseAnalysis(logs: any[]) {
-    // 1. Prune context (remove noise)
-    const prunedLogs = logs.map(log => ({
-      path: log.url,
-      method: log.method,
-      status: log.status,
-      duration: log.duration,
-      error: typeof log.response === 'string' ? log.response.substring(0, 500) : JSON.stringify(log.response).substring(0, 500)
-    }));
-
-    const prompt = `
-      Analyze these API logs and identify the root cause of failures.
-      Format the response as a clear, professional summary for a DevOps engineer.
-      
-      Logs:
-      ${JSON.stringify(prunedLogs)}
-      
-      Return JSON: { "root_cause": "...", "severity": "...", "recommended_action": "..." }
-    `;
-
-    return this.callNvidia(prompt, true);
-  }
-
-  /**
-   * Answers natural language questions about API performance.
-   */
-  async naturalLanguageQuery(query: string, projectId: string) {
-    // Fetch some basic context first
-    const stats = await prisma.requestHistory.findMany({
-      where: { endpoint: { project_id: projectId } },
-      take: 10,
-      orderBy: { created_at: 'desc' }
-    });
-
-    const prompt = `
-      The user is asking: "${query}"
-      Based on these recent logs: ${JSON.stringify(stats.map(s => ({ m: s.method, u: s.url, s: s.status, d: s.duration })))}
-      Provide a helpful, data-driven answer. 
-      Keep it professional and concise.
-    `;
-
-    return this.callNvidia(prompt);
-  }
-
-  /**
-   * Suggests a code fix or configuration change for a specific error.
-   */
-  async suggestFix(errorLog: any) {
-    const prompt = `
-      Suggest a fix for this API error:
-      Path: ${errorLog.url}
-      Status: ${errorLog.status}
-      Response: ${JSON.stringify(errorLog.response)}
-      
-      Explain the fix in technical detail but keep it brief.
-    `;
-
-    return this.callNvidia(prompt);
-  }
-
-  /**
-   * Original method: Explains an endpoint to developers.
-   */
-  async explainEndpoint(endpointId: string) {
-    const endpoint = await prisma.endpoint.findUnique({
-       where: { id: endpointId },
-       include: { project: true }
-    });
-
-    if (!endpoint) throw new Error('Endpoint not found');
-
-    const prompt = `
-      Explain this API endpoint:
-      Method: ${endpoint.method}
-      Path: ${endpoint.path}
-      Request: ${JSON.stringify(endpoint.request_schema)}
-      Response: ${JSON.stringify(endpoint.response_schema)}
-      
-      Return JSON: { "purpose": "...", "request_explanation": "...", "response_explanation": "...", "use_case": "..." }
-    `;
-
-    return this.callNvidia(prompt, true);
-  }
-
-  private async callNvidia(prompt: string, isJson: boolean = false) {
+  private async callNvidia(prompt: string, isJson: boolean = true) {
     try {
       const response = await nvidia.chat.completions.create({
         model: MODEL,
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.2,
+        messages: [{ role: "system", content: "You are a professional assistant. Follow instructions strictly." }, { role: "user", content: prompt }],
+        temperature: 0.3, // PRO TIP: Fixed temperature for consistent output
         max_tokens: 1024,
         response_format: isJson ? { type: "json_object" } : undefined,
       } as any);
 
       const content = response.choices[0]?.message?.content || "";
-      return isJson ? JSON.parse(content) : content;
+      return isJson ? cleanLLMJSON(content) : content;
     } catch (error: any) {
       console.error('NVIDIA AI Service Error:', error.message || error);
       throw new Error(`AI generation failed: ${error.message}`);
     }
   }
+
+  // 🥇 1️⃣ AI API Auditor
+  async auditEndpointSecurity(code: string) {
+    const prompt = `
+You are a senior backend security engineer.
+
+Analyze the following API endpoint code and identify issues.
+
+Focus on:
+- Authentication & authorization
+- Input validation
+- Performance issues
+- Security vulnerabilities
+- Best practices
+
+Return STRICT JSON only (no explanation outside JSON):
+
+{
+  "endpoint": "",
+  "issues": [],
+  "suggestions": [],
+  "security_score": 0
+}
+
+Rules:
+- security_score must be between 0 to 10
+- Keep issues and suggestions short and precise
+
+API Code:
+${code}
+    `;
+    return this.callNvidia(prompt);
+  }
+
+  // 🥈 2️⃣ Smart API Documentation
+  async generateSmartDocumentation(code: string) {
+    const prompt = `
+You are an expert API documentation generator.
+
+Analyze the following Express API endpoint and generate structured documentation.
+
+Return STRICT JSON:
+
+{
+  "endpoint": "",
+  "method": "",
+  "description": "",
+  "request": {
+    "params": [],
+    "body": {}
+  },
+  "response": {
+    "success": {},
+    "error": {}
+  },
+  "example_request": "",
+  "example_response": ""
+}
+
+Rules:
+- Infer missing schemas intelligently
+- Keep response realistic
+- Do not add explanation outside JSON
+
+API Code:
+${code}
+    `;
+    return this.callNvidia(prompt);
+  }
+
+  // 🥉 3️⃣ Refactoring Suggestions
+  async suggestRefactoring(code: string) {
+    const prompt = `
+You are a senior software engineer reviewing backend code.
+
+Analyze the API code and suggest improvements.
+
+Focus on:
+- Code structure
+- Performance
+- Maintainability
+- Best practices
+
+Return STRICT JSON:
+
+{
+  "improvements": []
+}
+
+Rules:
+- Give actionable suggestions
+- Avoid generic advice
+
+API Code:
+${code}
+    `;
+    return this.callNvidia(prompt);
+  }
+
+  // 🔥 4️⃣ API Risk Detection
+  async detectApiRisks(code: string) {
+    const prompt = `
+You are a backend security expert.
+
+Analyze the API code and detect risks.
+
+Focus on:
+- Missing authentication
+- Hardcoded secrets
+- Unsafe queries
+- Missing validation
+- Data exposure risks
+
+Return STRICT JSON:
+
+{
+  "risks": [],
+  "severity": "low | medium | high"
+}
+
+Rules:
+- Be precise
+- No explanation outside JSON
+
+API Code:
+${code}
+    `;
+    return this.callNvidia(prompt);
+  }
+
+  // 🤯 5️⃣ Explain My Backend
+  async explainBackendSystem(endpointsData: any[]) {
+    const prompt = `
+You are a system architect.
+
+Given multiple API endpoints, explain the backend system.
+
+Return STRICT JSON:
+
+{
+  "architecture": "",
+  "flow": "",
+  "technologies": [],
+  "summary": ""
+}
+
+Rules:
+- Keep explanation simple but professional
+- Identify patterns like MVC, REST, etc.
+
+API Endpoints:
+${JSON.stringify(endpointsData)}
+    `;
+    return this.callNvidia(prompt);
+  }
+
+  // 🧠 6️⃣ Test Case Generator
+  async generateTestCases(code: string) {
+    const prompt = `
+You are a QA engineer.
+
+Generate test cases for the API.
+
+Return STRICT JSON:
+
+{
+  "test_cases": [
+    {
+      "name": "",
+      "description": "",
+      "input": {},
+      "expected_output": {}
+    }
+  ]
+}
+
+Rules:
+- Include positive and negative cases
+- Cover edge cases
+
+API Code:
+${code}
+    `;
+    return this.callNvidia(prompt);
+  }
+
+  // 📊 7️⃣ API Usage Intelligence
+  async analyzeApiUsage(analyticsData: any) {
+    const prompt = `
+You are a performance engineer.
+
+Analyze API usage data and give insights.
+
+Return STRICT JSON:
+
+{
+  "insights": [],
+  "bottlenecks": [],
+  "recommendations": []
+}
+
+Rules:
+- Focus on performance & scalability
+
+Data:
+${JSON.stringify(analyticsData)}
+    `;
+    return this.callNvidia(prompt);
+  }
+
+  // 🔄 8️⃣ Code Change Summary
+  async summarizeCodeChanges(oldCode: string, newCode: string) {
+    const prompt = `
+You are a senior developer.
+
+Compare two versions of API code and summarize changes.
+
+Return STRICT JSON:
+
+{
+  "added": [],
+  "removed": [],
+  "modified": [],
+  "summary": ""
+}
+
+Old Code:
+${oldCode}
+
+New Code:
+${newCode}
+    `;
+    return this.callNvidia(prompt);
+  }
+
+  // 🤖 9️⃣ AI Chat (Without RAG)
+  async chatWithApiData(endpointsData: any, question: string) {
+    const prompt = `
+You are an intelligent assistant for a backend system.
+
+Answer the user's question based only on the provided API data.
+
+Rules:
+- Be accurate
+- If not found, say "Not found in API"
+
+API Data:
+${JSON.stringify(endpointsData)}
+
+User Question:
+${question}
+    `;
+    return this.callNvidia(prompt, false); // Chat assumes custom response formatting, disable forced JSON structure
+  }
+
+  // 🧩 🔟 API Grouping
+  async groupApiEndpoints(endpointList: any[]) {
+    const prompt = `
+You are a backend architect.
+
+Group API endpoints into logical categories.
+
+Return STRICT JSON:
+
+{
+  "groups": {
+    "category_name": []
+  }
+}
+
+Rules:
+- Group by functionality (auth, user, payment, etc.)
+- Do not miss any endpoint
+
+Endpoints:
+${JSON.stringify(endpointList)}
+    `;
+    return this.callNvidia(prompt);
+  }
+
 }
