@@ -11,11 +11,12 @@ services:
     env_file:
       - ./server/.env
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-root}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-api_insight}?schema=public
-      - REDIS_URL=redis://redis:6379
+      DATABASE_URL: postgresql://${POSTGRES_USER:-root}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-api_insight}?schema=public
+      REDIS_URL: redis://redis:6379
     depends_on:
       - postgres
       - redis
+    command: sh -c "npx prisma db push && node dist/index.js"
 
   web:
     build:
@@ -33,17 +34,19 @@ services:
     image: postgres:15-alpine
     restart: always
     environment:
-      - POSTGRES_USER=${POSTGRES_USER:-root}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
-      - POSTGRES_DB=${POSTGRES_DB:-api_insight}
+      POSTGRES_USER: ${POSTGRES_USER:-root}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-api_insight}
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   redis:
     image: redis:7-alpine
     restart: always
-
-
+    ports:
+      - "6379:6379"
 
 volumes:
   postgres_data:
