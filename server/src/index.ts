@@ -81,7 +81,7 @@ const start = async () => {
     const PORT = process.env.PORT || 5000;
     httpServer.listen(PORT, () => {
       console.log(`🚀 RADIX Backend Operational on port ${PORT}`);
-      console.log(`🔗 API Base: http://localhost:${PORT}/api`);
+      console.log(`🔗 API Base: http://13.206.50.255:${PORT}/api`);
     });
 
     httpServer.on('error', (error: any) => {
