@@ -34,7 +34,7 @@ app.use(helmet({
 }));
 app.use(compression());
 app.use(cors({
-  origin: ['http://localhost:5173'],
+  origin: ['http://localhost:5173', `${process.env.FRONTEND_URL}`, `${process.env.AWS_EC2_IP}`],
   credentials: true
 }));
 app.use(express.json());

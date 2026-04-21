@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://13.206.50.255:5000/api',
+  baseURL: import.meta.env.VITE_API_URL , // you can deployed at render or aws ec2 both
   headers: {
     'Content-Type': 'application/json',
   },
